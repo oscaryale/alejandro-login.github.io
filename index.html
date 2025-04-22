@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Login con Google</title>
+  <meta name="google-signin-client_id" content="53284906967-ipq8hputcfli37ujqo6lnl5vlkedep9i.apps.googleusercontent.com">
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/jwt-decode@3.1.2/build/jwt-decode.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 50px;
+    }
+    img {
+      border-radius: 50%;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Inicia sesión con Google</h1>
+  <div id="buttonDiv"></div>
+  <p id="nombre"></p>
+  <img id="foto" width="100" style="display:none;">
+
+  <script>
+    function handleCredentialResponse(response) {
+      const data = jwt_decode(response.credential);
+      document.getElementById("nombre").textContent = `Hola, ${data.name}`;
+      const img = document.getElementById("foto");
+      img.src = data.picture;
+      img.style.display = "block";
+      console.log("Token ID:", response.credential);
+      console.log("Datos decodificados:", data);
+    }
+
+    window.onload = function () {
+      google.accounts.id.initialize({
+        client_id: "53284906967-ipq8hputcfli37ujqo6lnl5vlkedep9i.apps.googleusercontent.com",
+        callback: handleCredentialResponse,
+        auto_select: false,
+        cancel_on_tap_outside: false
+      });
+      google.accounts.id.renderButton(
+        document.getElementById("buttonDiv"),
+        { theme: "outline", size: "large" }
+      );
+    };
+  </script>
+</body>
+</html>
